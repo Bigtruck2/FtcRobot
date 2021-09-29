@@ -4,7 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+
 
 import java.util.ArrayList;
 
@@ -20,19 +23,15 @@ public class Sebas extends LinearOpMode {
         right = motor("rightMotor");
         left = motor("leftMotor");
         arm = motor("armMotor");
+        Robot robot = new Robot(right,left);
         touchSensor = (TouchSensor) hardware(TouchSensor.class,"touch");
         right.setDirection(DcMotorSimple.Direction.REVERSE);
         waitForStart();
         if (opModeIsActive()) {
             while (opModeIsActive()) {
-                if (touchSensor.isPressed()) {
-                    if (gamepad1.left_stick_y > .25 || gamepad1.left_stick_y < -0.25) {
-                        left.setPower(-(0.5 * gamepad1.left_stick_y));
-                        right.setPower(-(0.5 * gamepad1.left_stick_y));
-                    } else {
-                        left.setPower(-(.3 * gamepad1.left_stick_x));
-                        right.setPower((.3 * gamepad1.left_stick_x));
-                    }
+                if (!touchSensor.isPressed()) {
+                    robot.setBoth(gamepad1.left_stick_y);
+                    robot.addTurnPower(gamepad1.left_stick_x);
                     arm.setPower(-(.5 * gamepad1.right_stick_y));
                     telemUpdate();
                 }
