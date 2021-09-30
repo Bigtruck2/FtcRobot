@@ -29,38 +29,22 @@ public class Robot {
         powerRight = -(0.5 *d);
 
     }
-    public void addPower(double power){
-        if(powerRight<0) {
-            right.setPower(powerRight + .5*power);
-            powerRight = powerRight + .5*power;
-        }else {
-            right.setPower(powerRight - .5*power);
-            powerRight = powerRight - .5*power;
-        }
-        if(powerLeft<0) {
-            left.setPower(powerLeft + .5*power);
-            powerLeft = powerLeft + .5*power;
 
-        }else {
-            left.setPower(powerLeft - .5*power);
-            powerLeft = powerLeft - .5*power;
-        }
-    }
     public void addTurnPower(double power){
         if(powerRight<0) {
-            right.setPower(powerRight + .3*power);
-            powerRight = powerRight + .3*power;
-        }else {
             right.setPower(powerRight - .3*power);
             powerRight = powerRight - .3*power;
+        }else {
+            right.setPower(powerRight + .3*power);
+            powerRight = powerRight + .3*power;
         }
         if(powerLeft<0) {
-            left.setPower(powerLeft - .3*power);
-            powerLeft = powerLeft - .3*power;
-
-        }else {
             left.setPower(powerLeft + .3*power);
             powerLeft = powerLeft + .3*power;
+
+        }else {
+            left.setPower(powerLeft - .3*power);
+            powerLeft = powerLeft - .3*power;
         }
     }
 }
