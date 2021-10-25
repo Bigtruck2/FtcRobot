@@ -19,6 +19,8 @@ good coding practice is important for a project this size
     -if you think you could do a better job then rewrite it
     -talk to group before changing something
     -talk to group when coding something because there may be better ways to write thing or you might write something wrong and have to restart
+
+
 download android studio here:
 https://developer.android.com/studio
 get android 10.0 NOT 11
@@ -87,6 +89,8 @@ public Object hardware(Class<?> c, String s){
 it is not necessary to use this method but it makes the code much cleaner and adds the hardware to a hardware list
 the hardware list could be changed to a hashmap 
 the hardware list is not currently used but can be later
+
+EULER ANGLES ARE MEASURED IN RADIANS
 
 https://en.wikipedia.org/wiki/Euclidean_vector
 https://en.wikipedia.org/wiki/Euler_angles
