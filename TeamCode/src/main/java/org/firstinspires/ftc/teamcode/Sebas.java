@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -9,6 +10,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
+import org.firstinspires.ftc.robotcore.external.android.util.Size;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureRequest;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSession;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraException;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.ArrayList;
@@ -26,31 +32,41 @@ public class Sebas extends LinearOpMode {
     private ColorRangeSensor color;
     private final ArrayList<Object> hardwareList = new ArrayList<>();
     private Robot robot;
+    private BNO055IMU imu;
+    private final BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    //private Camera camera;
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         //get all hardware here
         right = motor("rightMotor");
         left = motor("leftMotor");
-        robot = new Robot(right,left);
+
+        imu = hardwareMap.get(BNO055IMU.class,"imu");
+        robot = new Robot(right,left,imu);
         touchSensor = (TouchSensor) hardware(TouchSensor.class,"touch");
         color = (ColorRangeSensor) hardware(ColorRangeSensor.class, "color");
+        //camera = (Camera) hardware(Camera.class,"camera");
         //get the robot ready to run
         right.setDirection(DcMotorSimple.Direction.REVERSE);
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.temperatureUnit = BNO055IMU.TempUnit.FARENHEIT;
+        imu.initialize(parameters);
+
         waitForStart();
         if (opModeIsActive()) {
+            robot.setBoth(0);
+            Thread thread = new Thread(new Server(robot));
+            thread.start();
             while (opModeIsActive()) {
                 if (!touchSensor.isPressed()) {
-                    if(color.getDistance(DistanceUnit.CM)>5) {
                         robot.setBoth(gamepad1.left_stick_y);
                         robot.addTurnPower(gamepad1.left_stick_x);
-                        telemUpdate();
-                    }else {
-                        robot.setBoth(0);
-                    }
                 }else {
                     robot.setBoth(0);
                 }
+                telemUpdate();
             }
+            thread.stop();
         }
     }
     //get motor quickly
@@ -70,6 +86,7 @@ public class Sebas extends LinearOpMode {
         telemetry.addData("Right Power", right.getPower());
         telemetry.addData("Touch Sensor Pressed", touchSensor.isPressed());
         telemetry.addData("Distance of color sensor cm",color.getDistance(DistanceUnit.CM));
+        telemetry.addData("Angular Orientation",imu.getAngularOrientation().toString());
         telemetry.update();
     }
 }
