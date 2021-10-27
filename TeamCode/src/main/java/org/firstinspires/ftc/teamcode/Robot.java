@@ -4,6 +4,9 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.vuforia.ImageTarget;
 
+import org.firstinspires.ftc.robotcore.external.JavaUtil;
+import org.firstinspires.ftc.teamcode.util.MathUtil;
+
 
 public class Robot {
     private final DcMotor right;
@@ -16,19 +19,9 @@ public class Robot {
         this.imu = imu;
     }
 
-    public synchronized void setDirection(double yaw){
+    public synchronized void setDirection(int yaw){
         byte power = 1;
-        if(yaw > 0){
-            power*=-1;
 
-        }
-        while(yaw == imu.getAngularOrientation().firstAngle){
-            this.setBoth(0);
-            this.addTurnPower(power);
-        }
-    }
-    public synchronized void addDirection(double yaw){
-        byte power = 1;
         int difference = (int) (yaw -imu.getAngularOrientation().firstAngle);
         if(Math.abs(difference)<180){
             if(difference>0){
@@ -41,9 +34,17 @@ public class Robot {
         }
         while (Math.abs(difference)>2){
             difference = (int) (yaw -imu.getAngularOrientation().firstAngle);
-            this.setBoth(0);
-            this.addTurnPower(power);
+            setTurnPower(power);
         }
+    }
+    public synchronized void addDirection(int yaw){
+        yaw = (int) MathUtil.combine(imu.getAngularOrientation().firstAngle,yaw);
+        if(yaw>180){
+            yaw-=360;
+        }else{
+            yaw+=360;
+        }
+        setDirection(yaw);
     }
     //set left power
     public void setLeft(double d){
@@ -67,37 +68,13 @@ public class Robot {
     //this is how all the turning is done
     //its added to the power it was set to
     public void addTurnPower(double power){
-        if(powerRight<0) {
-            right.setPower(powerRight - .3*power);
-            powerRight = powerRight - .3*power;
-
-        }else {
-            right.setPower(powerRight + .3*power);
-            powerRight = powerRight + .3*power;
-        }
-        if(powerLeft<0) {
-            left.setPower(powerLeft + .3*power);
-            powerLeft = powerLeft + .3*power;
-        }else {
-            left.setPower(powerLeft - .3*power);
-            powerLeft = powerLeft - .3*power;
-        }
+        powerRight = MathUtil.combine(powerRight,.3*power);
+        right.setPower(powerRight);
+        powerLeft = MathUtil.combine(powerLeft, .3*power);
+        left.setPower(powerLeft);
     }
     public void setTurnPower(double power){
-        if(powerRight<0) {
-            right.setPower(-.3*power);
-            powerRight = -.3*power;
-        }else {
-            right.setPower(.3*power);
-            powerRight = .3*power;
-        }
-        if(powerLeft<0) {
-            left.setPower(.3*power);
-            powerLeft = .3*power;
-
-        }else {
-            left.setPower(-.3*power);
-            powerLeft = -.3*power;
-        }
+        setBoth(0);
+        addTurnPower(power);
     }
 }

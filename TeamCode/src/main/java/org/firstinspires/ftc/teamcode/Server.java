@@ -9,7 +9,7 @@ import java.net.Socket;
 
 public class Server implements Runnable {
     private ServerSocket serverSocket;
-    private Robot robot;
+    private final Robot robot;
     private Socket socket;
     private DataOutputStream outputStream;
     private DataInputStream inputStream;
