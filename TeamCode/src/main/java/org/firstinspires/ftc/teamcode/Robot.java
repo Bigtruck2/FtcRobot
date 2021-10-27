@@ -21,7 +21,6 @@ public class Robot {
 
     public synchronized void setDirection(int yaw){
         byte power = 1;
-
         int difference = (int) (yaw -imu.getAngularOrientation().firstAngle);
         if(Math.abs(difference)<180){
             if(difference>0){
