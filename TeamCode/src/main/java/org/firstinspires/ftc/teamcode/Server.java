@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-
+//this is a server i coded a simple client to connect to this server
+//join the bot network
 public class Server implements Runnable {
     private ServerSocket serverSocket;
     private final Robot robot;
@@ -27,9 +28,35 @@ public class Server implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        while (true){
+        robot.setRunning(true);
+        while (robot.isRunning()){
             try {
-                robot.addDirection(inputStream.readInt());
+                String command = inputStream.readUTF();
+                String nums = command.substring(command.indexOf(' '));
+                double value = 0;
+                for(int i=0;i<command.length();i++){
+                    if(!Character.isDigit(nums.charAt(i))){
+                        value=0;
+                        break;
+                    }
+                    value = Double.parseDouble(nums);
+                }
+
+                if(command.toLowerCase().startsWith("setdirection")){
+                    robot.setDirection(value);
+                }else if(command.toLowerCase().startsWith("adddirection")){
+                    robot.addDirection(value);
+                }else if(command.toLowerCase().startsWith("setboth")){
+                    robot.setBoth(value);
+                }else if(command.toLowerCase().startsWith("setright")){
+                    robot.setRight(value);
+                }else if(command.toLowerCase().startsWith("setleft")){
+                    robot.setLeft(value);
+                }else if(command.toLowerCase().startsWith("addturnpower")){
+                    robot.addTurnPower(value);
+                }else if(command.toLowerCase().startsWith("setturnpower")){
+                    robot.setTurnPower(value);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

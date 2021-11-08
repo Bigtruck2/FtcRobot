@@ -9,18 +9,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-
-import org.firstinspires.ftc.robotcore.external.android.util.Size;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureRequest;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCaptureSession;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraException;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.ArrayList;
 
-@TeleOp(name = "Sebas")
-public class Sebas extends LinearOpMode {
+@TeleOp(name = "Robot Code")
+public class MainLoop extends LinearOpMode {
     //create variable here so they can be accessed by other methods keep them private if possible and make final if you don't want them to change
     //if you need to make a variable public then make getters and setters
     //DON'T MAKE STATIC METHODS OR VARIABLES
@@ -36,7 +30,7 @@ public class Sebas extends LinearOpMode {
     private final BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
     //private Camera camera;
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         //get all hardware here
         right = motor("rightMotor");
         left = motor("leftMotor");
@@ -66,7 +60,7 @@ public class Sebas extends LinearOpMode {
                 }
                 telemUpdate();
             }
-            thread.stop();
+            robot.setRunning(false);
         }
     }
     //get motor quickly

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.util;
 
 public class MathUtil {
+    //only class u can make static methods
     public static double combine(double first, double second){
         if(first>0) {
             return first + second;

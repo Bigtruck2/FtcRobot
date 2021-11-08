@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.vuforia.ImageTarget;
 
-import org.firstinspires.ftc.robotcore.external.JavaUtil;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
 
 
@@ -13,13 +11,14 @@ public class Robot {
     private final DcMotor left;
     private double powerRight,powerLeft = 0;
     private final BNO055IMU imu;
+    private boolean running = false;
     public Robot(DcMotor right, DcMotor left, BNO055IMU imu){
         this.right = right;
         this.left = left;
         this.imu = imu;
     }
 
-    public synchronized void setDirection(int yaw){
+    public synchronized void setDirection(double yaw){
         byte power = 1;
         int difference = (int) (yaw -imu.getAngularOrientation().firstAngle);
         if(Math.abs(difference)<180){
@@ -36,7 +35,7 @@ public class Robot {
             setTurnPower(power);
         }
     }
-    public synchronized void addDirection(int yaw){
+    public synchronized void addDirection(double yaw){
         yaw = (int) MathUtil.combine(imu.getAngularOrientation().firstAngle,yaw);
         if(yaw>180){
             yaw-=360;
@@ -67,7 +66,7 @@ public class Robot {
     //this is how all the turning is done
     //its added to the power it was set to
     public void addTurnPower(double power){
-        powerRight = MathUtil.combine(powerRight,.3*power);
+        powerRight = MathUtil.combine(powerRight, -.3*power);
         right.setPower(powerRight);
         powerLeft = MathUtil.combine(powerLeft, .3*power);
         left.setPower(powerLeft);
@@ -75,5 +74,13 @@ public class Robot {
     public void setTurnPower(double power){
         setBoth(0);
         addTurnPower(power);
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 }
