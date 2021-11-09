@@ -61,6 +61,11 @@ public class MainLoop extends LinearOpMode {
                 telemUpdate();
             }
             robot.setRunning(false);
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
     //get motor quickly

@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
 //this is a server i coded a simple client to connect to this server
 //join the bot network
 public class Server implements Runnable {
@@ -31,7 +34,16 @@ public class Server implements Runnable {
         robot.setRunning(true);
         while (robot.isRunning()){
             try {
-                String command = inputStream.readUTF();
+                byte[] bytes = new byte[1024];
+                inputStream.read(bytes);
+                if(Arrays.equals(bytes, new byte[1024])){
+                    socket = null;
+                    socket = serverSocket.accept();
+                    inputStream = new DataInputStream(socket.getInputStream());
+                    outputStream = new DataOutputStream(socket.getOutputStream());
+                    continue;
+                }
+                String command = new String(bytes, StandardCharsets.UTF_8);
                 String nums = command.substring(command.indexOf(' '));
                 double value = 0;
                 for(int i=0;i<command.length();i++){
@@ -58,6 +70,14 @@ public class Server implements Runnable {
                     robot.setTurnPower(value);
                 }
             } catch (IOException e) {
+                try {
+                    socket = serverSocket.accept();
+                    inputStream = new DataInputStream(socket.getInputStream());
+                    outputStream = new DataOutputStream(socket.getOutputStream());
+                    continue;
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
                 e.printStackTrace();
             }
         }
