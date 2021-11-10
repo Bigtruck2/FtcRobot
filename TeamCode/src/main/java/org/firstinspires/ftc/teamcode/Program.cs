@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-//client files
+
 namespace RobotClient
 {
     class Program
@@ -10,6 +10,7 @@ namespace RobotClient
 
         static void Main(string[] args)
         {
+        //client files
             //"192.168.43.1"
             Console.WriteLine("Type commands here type help for commands\nnot being able to type means you have not connected to the robot");
             client = new System.Net.Sockets.TcpClient("192.168.43.1", 25577);

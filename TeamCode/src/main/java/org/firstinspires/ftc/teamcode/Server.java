@@ -43,16 +43,9 @@ public class Server implements Runnable {
                     outputStream = new DataOutputStream(socket.getOutputStream());
                     continue;
                 }
-                String command = new String(bytes, StandardCharsets.UTF_8);
-                String nums = command.substring(command.indexOf(' '));
-                double value = 0;
-                for(int i=0;i<command.length();i++){
-                    if(!Character.isDigit(nums.charAt(i))){
-                        value=0;
-                        break;
-                    }
-                    value = Double.parseDouble(nums);
-                }
+                String command = new String(bytes, StandardCharsets.UTF_8).trim();
+                String nums = command.substring(command.indexOf(' ')+1);
+                double value = Double.parseDouble(nums);
 
                 if(command.toLowerCase().startsWith("setdirection")){
                     robot.setDirection(value);

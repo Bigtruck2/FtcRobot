@@ -9,4 +9,11 @@ public class MathUtil {
             return first - second;
         }
     }
+    public static double diffrence(double first, double second){
+        if(first<0) {
+            return first + second;
+        }else {
+            return first - second;
+        }
+    }
 }

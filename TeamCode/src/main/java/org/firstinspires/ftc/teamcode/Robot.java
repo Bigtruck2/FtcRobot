@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
 
 
@@ -12,10 +13,12 @@ public class Robot {
     private double powerRight,powerLeft = 0;
     private final BNO055IMU imu;
     private boolean running = false;
-    public Robot(DcMotor right, DcMotor left, BNO055IMU imu){
+    private Telemetry telemetry;
+    public Robot(DcMotor right, DcMotor left, BNO055IMU imu, Telemetry telemetry){
         this.right = right;
         this.left = left;
         this.imu = imu;
+        this.telemetry = telemetry;
     }
 
     public synchronized void setDirection(double yaw){
@@ -35,11 +38,11 @@ public class Robot {
             setTurnPower(power);
         }
     }
-    public synchronized void addDirection(double yaw){
-        yaw = (int) MathUtil.combine(imu.getAngularOrientation().firstAngle,yaw);
+    public void addDirection(double yaw){
+        yaw = (int) imu.getAngularOrientation().firstAngle+yaw;
         if(yaw>180){
             yaw-=360;
-        }else{
+        }else if(yaw < -180){
             yaw+=360;
         }
         setDirection(yaw);
@@ -61,7 +64,6 @@ public class Robot {
         right.setPower(-(0.5 *d));
         powerLeft = -(0.5 *d);
         powerRight = -(0.5 *d);
-
     }
     //this is how all the turning is done
     //its added to the power it was set to
@@ -82,5 +84,9 @@ public class Robot {
 
     public void setRunning(boolean running) {
         this.running = running;
+    }
+
+    public Telemetry getTelemetry() {
+        return telemetry;
     }
 }

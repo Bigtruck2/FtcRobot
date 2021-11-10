@@ -36,7 +36,7 @@ public class MainLoop extends LinearOpMode {
         left = motor("leftMotor");
 
         imu = hardwareMap.get(BNO055IMU.class,"imu");
-        robot = new Robot(right,left,imu);
+        robot = new Robot(right,left,imu,telemetry);
         touchSensor = (TouchSensor) hardware(TouchSensor.class,"touch");
         color = (ColorRangeSensor) hardware(ColorRangeSensor.class, "color");
         //camera = (Camera) hardware(Camera.class,"camera");
