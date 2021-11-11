@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
 
 //this is a server i coded a simple client to connect to this server
 //join the bot network
@@ -34,33 +35,49 @@ public class Server implements Runnable {
         robot.setRunning(true);
         while (robot.isRunning()){
             try {
-                byte[] bytes = new byte[1024];
-                inputStream.read(bytes);
-                if(Arrays.equals(bytes, new byte[1024])){
-                    socket = null;
-                    socket = serverSocket.accept();
-                    inputStream = new DataInputStream(socket.getInputStream());
-                    outputStream = new DataOutputStream(socket.getOutputStream());
-                    continue;
+                byte[] bytes = new byte[3];
+                int i = inputStream.read(bytes);
+                int num1 = bytes[0];
+                int num2 = bytes[1];
+                if(bytes[0]<0){
+                    num1+=256;
                 }
-                String command = new String(bytes, StandardCharsets.UTF_8).trim();
-                String nums = command.substring(command.indexOf(' ')+1);
-                double value = Double.parseDouble(nums);
+                if(bytes[1]<0){
+                    num2+=256;
+                }
+                String binary1 = Integer.toBinaryString(num1);
+                String binary2 = Integer.toBinaryString(num2);
+                if(binary1.length()<8){
+                    String missingBits = new String(new char[8-binary1.length()]).replace("\0", "0");
+                    binary1 = missingBits+binary1;
+                }
+                if(binary2.length()<8){
+                    String missingBits = new String(new char[8-binary2.length()]).replace("\0", "0");
+                    binary2 = missingBits+binary2;
+                }
+                double value = ((double)Integer.parseInt((binary1+binary2).substring(0,16),2))/128D;
 
-                if(command.toLowerCase().startsWith("setdirection")){
-                    robot.setDirection(value);
-                }else if(command.toLowerCase().startsWith("adddirection")){
-                    robot.addDirection(value);
-                }else if(command.toLowerCase().startsWith("setboth")){
-                    robot.setBoth(value);
-                }else if(command.toLowerCase().startsWith("setright")){
-                    robot.setRight(value);
-                }else if(command.toLowerCase().startsWith("setleft")){
-                    robot.setLeft(value);
-                }else if(command.toLowerCase().startsWith("addturnpower")){
-                    robot.addTurnPower(value);
-                }else if(command.toLowerCase().startsWith("setturnpower")){
-                    robot.setTurnPower(value);
+                switch (bytes[2]){
+                    case 0:
+                        robot.setDirection(value);
+                        break;
+                    case 1:
+                        robot.addDirection(value);
+                        break;
+                    case 2:
+                        robot.setBoth(value);
+                        break;
+                    case 3:
+                        robot.setRight(value);
+                        break;
+                    case 4:
+                        robot.setLeft(value);
+                        break;
+                    case 5:
+                        robot.addTurnPower(value);
+                        break;
+                    case 6:
+                        robot.setTurnPower(value);
                 }
             } catch (IOException e) {
                 try {
