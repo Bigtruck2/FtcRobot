@@ -45,18 +45,11 @@ public class Server implements Runnable {
                 if(bytes[1]<0){
                     num2+=256;
                 }
-                String binary1 = Integer.toBinaryString(num1);
-                String binary2 = Integer.toBinaryString(num2);
-                if(binary1.length()<8){
-                    String missingBits = new String(new char[8-binary1.length()]).replace("\0", "0");
-                    binary1 = missingBits+binary1;
+                double value = (num1*256+num2)/128D;
+                if(bytes[2]<0){
+                    bytes[2]+=128;
+                    value*=-1;
                 }
-                if(binary2.length()<8){
-                    String missingBits = new String(new char[8-binary2.length()]).replace("\0", "0");
-                    binary2 = missingBits+binary2;
-                }
-                double value = ((double)Integer.parseInt((binary1+binary2).substring(0,16),2))/128D;
-
                 switch (bytes[2]){
                     case 0:
                         robot.setDirection(value);
