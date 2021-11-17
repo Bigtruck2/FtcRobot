@@ -45,7 +45,7 @@ public class Server implements Runnable {
                 if(bytes[1]<0){
                     num2+=256;
                 }
-                double value = (num1*256+num2)/128D;
+                double value = (double) (num1|num2<<8)/128;
                 if(bytes[2]<0){
                     bytes[2]+=128;
                     value*=-1;
