@@ -67,7 +67,7 @@ namespace RobotClient
                 //converts double to floating point integer
                 int byteNum = (int)(value * 128+.5);
                 Console.WriteLine(byteNum);
-                bytes[0] = (byte)(byteNum&0xFF);
+                bytes[0] = (byte)(byteNum & 0xFF);
                 bytes[1] = (byte)((byteNum >> 8) & 0xFF);
                
                 ns.Write(bytes, 0, bytes.Length);
