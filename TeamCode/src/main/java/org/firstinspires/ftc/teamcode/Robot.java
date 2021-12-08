@@ -77,7 +77,16 @@ public class Robot {
         setBoth(0);
         addTurnPower(power);
     }
+    //idk if this works
+    public synchronized void move(double meters){
+        //0.284628294 circumference
+        //560 = 1 rotation
+        right.setTargetPosition((int)(right.getCurrentPosition()+((meters/0.284628294)*560)+.5));
+        left.setTargetPosition((int) (left.getCurrentPosition()+((meters/0.284628294)*560)+.5));
+        while (right.isBusy()||left.isBusy()){
 
+        }
+    }
     public boolean isRunning() {
         return running;
     }

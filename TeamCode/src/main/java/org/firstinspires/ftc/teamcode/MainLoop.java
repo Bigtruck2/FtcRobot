@@ -19,7 +19,7 @@ public class MainLoop extends LinearOpMode {
     //if you need to make a variable public then make getters and setters
     //DON'T MAKE STATIC METHODS OR VARIABLES
     //make an instance of the class if you want to access the method or variable
-
+    //4.5cm
     private DcMotor right;
     private DcMotor left;
     private TouchSensor touchSensor;
@@ -41,6 +41,8 @@ public class MainLoop extends LinearOpMode {
         color = (ColorRangeSensor) hardware(ColorRangeSensor.class, "color");
         //camera = (Camera) hardware(Camera.class,"camera");
         //get the robot ready to run
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right.setDirection(DcMotorSimple.Direction.REVERSE);
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.temperatureUnit = BNO055IMU.TempUnit.FARENHEIT;
@@ -49,8 +51,8 @@ public class MainLoop extends LinearOpMode {
         waitForStart();
         if (opModeIsActive()) {
             robot.setBoth(0);
-            Thread thread = new Thread(new Server(robot));
-            thread.start();
+            Thread sever = new Thread(new Server(robot));
+            sever.start();
             while (opModeIsActive()) {
                 if (!touchSensor.isPressed()) {
                         robot.setBoth(gamepad1.left_stick_y);
@@ -62,7 +64,7 @@ public class MainLoop extends LinearOpMode {
             }
             robot.setRunning(false);
             try {
-                thread.join();
+                sever.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

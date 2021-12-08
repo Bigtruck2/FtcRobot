@@ -37,20 +37,20 @@ public class Server implements Runnable {
             try {
                 byte[] bytes = new byte[3];
                 int i = inputStream.read(bytes);
-                int num1 = bytes[0];
-                int num2 = bytes[1];
-                if(bytes[0]<0){
+                int num1 = bytes[1];
+                int num2 = bytes[2];
+                if(bytes[1]<0){
                     num1+=256;
                 }
-                if(bytes[1]<0){
+                if(bytes[2]<0){
                     num2+=256;
                 }
                 double value = (double) (num1|num2<<8)/128;
-                if(bytes[2]<0){
-                    bytes[2]+=128;
+                if(bytes[0]<0){
+                    bytes[0]+=128;
                     value*=-1;
                 }
-                switch (bytes[2]){
+                switch (bytes[0]){
                     case 0:
                         robot.setDirection(value);
                         break;
@@ -71,6 +71,10 @@ public class Server implements Runnable {
                         break;
                     case 6:
                         robot.setTurnPower(value);
+                        break;
+                    case 7:
+                        robot.move(value);
+                        break;
                 }
             } catch (IOException e) {
                 try {

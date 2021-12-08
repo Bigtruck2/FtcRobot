@@ -21,7 +21,7 @@ namespace RobotClient
                 String command = Console.ReadLine();
                 if (command.ToLower().Equals("help"))
                 {
-                    Console.Out.WriteLine("setdirection adddirection setboth setright setleft addturnpower setturnpower reconnect disconnect help");
+                    Console.Out.WriteLine("setdirection adddirection setboth setright setleft addturnpower setturnpower move reconnect disconnect help");
                     continue;
                 }
                 else if (command.ToLower().Equals("reconnect"))
@@ -58,17 +58,17 @@ namespace RobotClient
                 if (value < 0)
                 {
                     value *= -1;
-                    bytes[2] = (byte)(commandId + 128) ;
+                    bytes[0] = (byte)(commandId + 128) ;
                 }
                 else
                 {
-                    bytes[2] = commandId;
+                    bytes[0] = commandId;
                 }
                 //converts double to floating point integer
                 int byteNum = (int)(value * 128+.5);
                 Console.WriteLine(byteNum);
-                bytes[0] = (byte)(byteNum & 0xFF);
-                bytes[1] = (byte)((byteNum >> 8) & 0xFF);
+                bytes[1] = (byte)(byteNum & 0xFF);
+                bytes[2] = (byte)((byteNum >> 8) & 0xFF);
                
                 ns.Write(bytes, 0, bytes.Length);
             }
@@ -83,6 +83,7 @@ namespace RobotClient
                 dictionary.Add("setleft", 4);
                 dictionary.Add("addturnpower", 5);
                 dictionary.Add("setturnpower", 6);
+                dictionary.Add("move",7)
             }
            
     }
