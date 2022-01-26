@@ -28,6 +28,8 @@ public class MainLoop extends LinearOpMode {
     private Robot robot;
     private BNO055IMU imu;
     private final BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    private double lastX;
+    private double lastY;
     //private Camera camera;
     @Override
     public void runOpMode() {
@@ -54,9 +56,13 @@ public class MainLoop extends LinearOpMode {
             Thread sever = new Thread(new Server(robot));
             sever.start();
             while (opModeIsActive()) {
-                if (!touchSensor.isPressed()) {
+                if(robot.isBusy()){
+                    continue;
+                }else if (!touchSensor.isPressed()&&gamepad1.left_stick_x!=lastX&&gamepad1.left_stick_y!=lastY) {
                         robot.setBoth(gamepad1.left_stick_y);
                         robot.addTurnPower(gamepad1.left_stick_x);
+                        lastX = gamepad1.left_stick_x;
+                        lastY = gamepad1.left_stick_y;
                 }else {
                     robot.setBoth(0);
                 }

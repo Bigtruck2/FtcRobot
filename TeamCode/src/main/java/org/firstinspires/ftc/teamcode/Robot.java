@@ -14,6 +14,7 @@ public class Robot {
     private final BNO055IMU imu;
     private boolean running = false;
     private Telemetry telemetry;
+    private boolean busy;
     public Robot(DcMotor right, DcMotor left, BNO055IMU imu, Telemetry telemetry){
         this.right = right;
         this.left = left;
@@ -22,6 +23,7 @@ public class Robot {
     }
 
     public synchronized void setDirection(double yaw){
+        setBusy(true);
         byte power = 1;
         int difference = (int) (yaw -imu.getAngularOrientation().firstAngle);
         if(Math.abs(difference)<180){
@@ -33,10 +35,11 @@ public class Robot {
                 power*=-1;
             }
         }
+        setTurnPower(power);
         while (Math.abs(difference)>2){
             difference = (int) (yaw -imu.getAngularOrientation().firstAngle);
-            setTurnPower(power);
         }
+        setBusy(false);
     }
     public void addDirection(double yaw){
         yaw = (int) imu.getAngularOrientation().firstAngle+yaw;
@@ -81,11 +84,13 @@ public class Robot {
     public synchronized void move(double meters){
         //0.284628294 circumference
         //560 = 1 rotation
+        setBusy(true);
         right.setTargetPosition((int)(right.getCurrentPosition()+((meters/0.284628294)*560)+.5));
         left.setTargetPosition((int) (left.getCurrentPosition()+((meters/0.284628294)*560)+.5));
         while (right.isBusy()||left.isBusy()){
 
         }
+        setBusy(false);
     }
     public boolean isRunning() {
         return running;
@@ -97,5 +102,13 @@ public class Robot {
 
     public Telemetry getTelemetry() {
         return telemetry;
+    }
+
+    public void setBusy(boolean busy) {
+        this.busy = busy;
+    }
+
+    public boolean isBusy() {
+        return busy;
     }
 }

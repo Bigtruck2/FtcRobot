@@ -75,7 +75,7 @@ namespace RobotClient
         }
             static void fillDictionary(System.Collections.Generic.Dictionary<string, byte> dictionary)
             {
-            //hashmap of commands and there bytes
+            //hashmap of commands and their bytes
                 dictionary.Add("setdirection", 0);
                 dictionary.Add("adddirection", 1);
                 dictionary.Add("setboth", 2);
