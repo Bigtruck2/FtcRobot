@@ -77,17 +77,20 @@ public class MainLoop extends LinearOpMode {
         }
     }
     //get motor quickly
+    //example of calling method right = motor("rightMotor");
     public DcMotor motor(String s){
         hardwareList.add(hardwareMap.dcMotor.contains(s) ? hardwareMap.dcMotor.get(s) : null);
          return hardwareMap.dcMotor.contains(s) ? hardwareMap.dcMotor.get(s) : null;
     }
     //get any hardware quickly
+    //example of calling method touchSensor = (TouchSensor) hardware(TouchSensor.class,"touch");
     public Object hardware(Class<?> c, String s){
         hardwareList.add(hardwareMap.get(c,s));
         return hardwareMap.get(c,s);
     }
     //telemetry is the things shown on the android phone
     //its useful because it provides data and tells you whats working and whats not
+    //example of calling method while(true){telemUpdate();}
     public void telemUpdate(){
         telemetry.addData("Left Power", left.getPower());
         telemetry.addData("Right Power", right.getPower());

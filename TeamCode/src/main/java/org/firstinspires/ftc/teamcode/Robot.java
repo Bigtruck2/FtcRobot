@@ -15,13 +15,17 @@ public class Robot {
     private boolean running = false;
     private Telemetry telemetry;
     private boolean busy;
+    //constructor
     public Robot(DcMotor right, DcMotor left, BNO055IMU imu, Telemetry telemetry){
         this.right = right;
         this.left = left;
         this.imu = imu;
         this.telemetry = telemetry;
     }
-
+    //be careful when calling this method on the main thread
+    //example setDirection(179.54);
+    //yaw = 0 to 180 and -0 to -180
+    //adds angle to starting angle and points that direction
     public synchronized void setDirection(double yaw){
         setBusy(true);
         byte power = 1;
@@ -41,6 +45,10 @@ public class Robot {
         }
         setBusy(false);
     }
+    //be careful when calling this method on the main thread
+    //example addDirection(179.54);
+    //yaw = 0 to 180 and -0 to -180
+    //turns robot to the angle from current angle
     public void addDirection(double yaw){
         yaw = (int) imu.getAngularOrientation().firstAngle+yaw;
         if(yaw>180){
@@ -51,17 +59,20 @@ public class Robot {
         setDirection(yaw);
     }
     //set left power
+    //d = -1 to 1 example setLeft(-0.3);
     public void setLeft(double d){
        left.setPower(-(0.5 *d));
        powerLeft = -(0.5 *d);
     }
     //set right power
+    //example setRight(-0.3);
     public void setRight(double d){
         right.setPower(-(0.5 *d));
         powerRight = -(0.5 *d);
 
     }
     //set speed of both motor
+    //example setBoth(-0.3);
     public void setBoth(double d){
         left.setPower(-(0.5 *d));
         right.setPower(-(0.5 *d));
@@ -70,12 +81,14 @@ public class Robot {
     }
     //this is how all the turning is done
     //its added to the power it was set to
+    //example addTurnPower(-.5)
     public void addTurnPower(double power){
         powerRight = MathUtil.combine(powerRight, -.3*power);
         right.setPower(powerRight);
         powerLeft = MathUtil.combine(powerLeft, .3*power);
         left.setPower(powerLeft);
     }
+    //sets power to 0 then calls addTurnPower();
     public void setTurnPower(double power){
         setBoth(0);
         addTurnPower(power);
@@ -92,6 +105,9 @@ public class Robot {
         }
         setBusy(false);
     }
+
+    //variable getters and setters
+    //mostly booleans
     public boolean isRunning() {
         return running;
     }

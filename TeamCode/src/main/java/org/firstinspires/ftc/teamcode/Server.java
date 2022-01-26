@@ -11,7 +11,8 @@ import java.util.Arrays;
 import java.util.Collections;
 
 //this is a server i coded a simple client to connect to this server
-//join the bot network
+//join the bot network to control it and download https://github.com/Bigtruck2/FtcRobot/releases/tag/v2
+//this runs on a separate thread
 public class Server implements Runnable {
     private ServerSocket serverSocket;
     private final Robot robot;
